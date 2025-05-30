@@ -13,4 +13,4 @@ WEAPON USES:
   PICKAXE:
     close-range utility
     while near a white square, hold action keys to activate gathering bar. Once the gathering bar reaches the full percentage of the gather, it will trigger the gather action, to take all of the squares in the     area of the action. for each square gathered, you gain points depending on the size of the orb.
-  NOTE: more weapons may e added in future updates.
+  NOTE: more weapons may be added in future updates.
