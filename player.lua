@@ -115,7 +115,7 @@ function player:draw()
          end
          love.graphics.setColor(1, 1, 1)
          love.graphics.rectangle("fill", self.x, self.y - 25, self.gather_progress, 10)
-         love.graphics.rectangle("line", self.x, self.y, self.hitbox.width, self.hitbox.height)
+         love.graphics.rectangle("line", self.x - self.hitbox.width / 2, self.y - self.hitbox.height / 2, self.hitbox.width, self.hitbox.height)
 end
 
 function player:keypressed(k)
