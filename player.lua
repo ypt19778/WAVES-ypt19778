@@ -6,13 +6,16 @@ function player.new(x, y, speed, health, scale)
          instance.x = x
          instance.y = y
 
+         instance.defSpeed = speed
          instance.speed = speed
          instance.health = health
-         instance.damage = 2000
+         instance.damage = 1
 
          instance.hitbox = {}
-         instance.hitbox.width = 100
-         instance.hitbox.height = 50
+         instance.hitbox.width = 200
+         instance.hitbox.height = 100
+         instance.hitbox.x = instance.x -- (instance.hitbox.width / 2)
+         instance.hitbox.y = instance.y -- (instance.hitbox.height / 2)
 
          instance.mode = "nil"
          instance.sprite = "(- -)"
@@ -52,6 +55,8 @@ function player:move(dt)
          elseif love.keyboard.isDown("d", "l") then
                   self.x = self.x + self.speed * dt
          end  
+         self.hitbox.x = self.x
+         self.hitbox.y = self.y
 
          if self.mode == "sword" then
                   self.sprite = self.sword_sprite
@@ -82,7 +87,7 @@ function player:move(dt)
                   end
 
                   if self.mode == "shield" then
-                           self.speed = self.speed / 2
+                           self.speed = self.defSpeed / 2
                            self.sprite = self.shield_active_sprite
                   end    
                   
@@ -91,10 +96,14 @@ function player:move(dt)
                            self.sprite = self.gather_active_sprite
                            if self.gather_progress > self.gather_limit then
                                     self.gather_progress = 0
+                                    pickup_orb = self:checkCollisions(bob, neworb)
+                                    if pickup_orb == true then
+                                             orbs:pickup()
+                                    end
                            end
                   end
          else
-                  self.speed = 100
+                  self.speed = self.defSpeed
                   self.sword_timer = 0
                   self.gather_progress = 0
          end
@@ -115,7 +124,7 @@ function player:draw()
          end
          love.graphics.setColor(1, 1, 1)
          love.graphics.rectangle("fill", self.x, self.y - 25, self.gather_progress, 10)
-         love.graphics.rectangle("line", self.x - self.hitbox.width / 2, self.y - self.hitbox.height / 2, self.hitbox.width, self.hitbox.height)
+         love.graphics.rectangle("line", self.hitbox.x, self.hitbox.y, self.hitbox.width, self.hitbox.height)
 end
 
 function player:keypressed(k)
@@ -129,9 +138,33 @@ function player:keypressed(k)
 end
 
 function player:checkCollisions(a, b)
-         if a.x + a.hitbox.width > b.x and a.x < b.x + b.hitbox.width then   
-                  if a.y + a.hitbox.height > b.y and a.y < b.y + b.hitbox.height then
-                           return true
+         if a.hitbox.x + a.hitbox.width > b.x then
+                  if a.hitbox.x < b.x + b.hitbox.width then   
+                           if a.hitbox.y + a.hitbox.height > b.y then
+                                    if a.hitbox.y < b.y + b.hitbox.height then
+                                             return true
+                                    end
+                           end
                   end
          end
+end
+
+function player:devtools()
+         tools = {
+                  setDamage = function(damage)
+                           self.damage = damage
+                  end,
+                  setSprites = function(sprite, input)
+                           self.sprite = input
+                  end,
+                  setSpeed = function(speed)
+                           self.defSpeed = speed
+                  end,
+                  killall = function(entity)
+                           for i, v in ipairs(entity) do
+                                    v.state = 'dead'
+                           end
+                  end
+         }   
+         return tools 
 end

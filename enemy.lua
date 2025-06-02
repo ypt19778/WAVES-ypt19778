@@ -39,27 +39,36 @@ function enemy.new(speed, health, type, scale)
                   instance.scale = scale * 1.5
          elseif type == "tst_dummy" then
                   instance.health = health ^ 9
-                  instance.speed = speed - speed
-                  instance.sprite = "   !!!\n/{+ # +/}"
+                  instance.speed = speed
+                  instance.sprite = "/{ # /}"
                   instance.scale = scale 
          end
 
          instance.hitbox = {}
+         instance.hitbox.x = instance.x
+         instance.hitbox.y = instance.y
          instance.hitbox.width = 100
-         instance.hitbox.height = 50
+         instance.hitbox.height = 25
+
+         instance.state = 'alive'
          
          return instance
 end
 
 function enemy:draw()
+         love.graphics.setColor(1, 0, 0, 100)
          love.graphics.print(self.sprite, font, self.x, self.y, nil, self.scale)
-         love.graphics.rectangle("fill", self.x, self.y - 40, self.health, 20)
+         for i, v in ipairs(enemy) do
+                  if v.health > 0 then
+                           love.graphics.rectangle("fill", v.x, v.y - 40, v.health, 20)
+                  end
+         end
+         love.graphics.rectangle("line", james.hitbox.x, james.hitbox.y, james.hitbox.width, james.hitbox.height)
 end
 
 function enemy:checkDeath()
          if self.health < 0 then
-                  enemy:despawn()
-                  score = score + 1
+                  enemy:despawn() 
          end
 end
 
@@ -71,10 +80,15 @@ function enemy:move(dt, gotox, gotoy)
 
          self.x = self.x + self.speed * cos * dt
          self.y = self.y + self.speed * sin * dt
+         self.hitbox.x = self.this
 end
 
 function enemy:despawn()
-         print("dead")
+         for i, v in ipairs(enemy) do
+                  v.sprite = "(X X)"
+                  v.defspeed = 0
+                  v.health = 0
+         end
 end
 --[[
 tank_enemies = {}

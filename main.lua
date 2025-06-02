@@ -1,6 +1,7 @@
 require 'menu'
 require 'player'
 require 'enemy'
+require 'orbs'
 
 game = {
          title = "TITLE",
@@ -15,11 +16,20 @@ function love.load()
          score = love.filesystem.read('scoredata.txt', 100)
 
          menu:init()
-         -- format for player : (x, y, speed, health, scale)dwda
+         -- format for player : (x, y, speed, health, scale)
          bob = player.new(10, 10, 100, 100, 1)
+         table.insert(player, bob)
+         dtp = bob:devtools()
+         dtp.setSpeed(200)
+         dtp.setDamage(100)
 
          -- format for enemy : (speed, health, type(string), scale)
-         james = enemy.new(100, 1, "def", 1)
+         james = enemy.new(100, 10, "tst_dummy", 1)
+         table.insert(enemy, james)
+
+         -- format for orb : (x, y, points given, size)
+         neworb = orbs.new(400, 300, 12, 1)
+         table.insert(orbs, neworb)
 end
 
 function love.update(dt)
@@ -43,6 +53,7 @@ function love.draw()
                   bob:draw()
                   love.graphics.setColor(1, 0, 0)
                   james:draw()
+                  neworb:draw()
          end
 end
 
