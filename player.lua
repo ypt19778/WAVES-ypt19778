@@ -13,9 +13,9 @@ function player.new(x, y, speed, health, scale)
 
          instance.hitbox = {}
          instance.hitbox.width = 200
-         instance.hitbox.height = 100
-         instance.hitbox.x = instance.x -- (instance.hitbox.width / 2)
-         instance.hitbox.y = instance.y -- (instance.hitbox.height / 2)
+         instance.hitbox.height = 200
+         instance.hitbox.x = instance.x - (instance.hitbox.width / 2)
+         instance.hitbox.y = instance.y - ((instance.hitbox.height / 2) + 100)
 
          instance.mode = "nil"
          instance.sprite = "(- -)"
@@ -55,9 +55,11 @@ function player:move(dt)
          elseif love.keyboard.isDown("d", "l") then
                   self.x = self.x + self.speed * dt
          end  
-         self.hitbox.x = self.x
-         self.hitbox.y = self.y
+         self.hitbox.x = self.x - (self.hitbox.width / 2)
+         self.hitbox.y = self.y - (self.hitbox.height / 2)
+end
 
+function player:interact()
          if self.mode == "sword" then
                   self.sprite = self.sword_sprite
          end
@@ -76,10 +78,14 @@ function player:move(dt)
                   ]]
                   if self.mode == "sword" and self.sword_timer ~= 10 then
                            if self.sword_timer == 1 then
-                                    damage_enemy = self:checkCollisions(bob, james)
-                                    if damage_enemy == true then
-                                             james.health = james.health - self.damage
-                                             james.x = james.x - 10
+                                    for i, v in ipairs(enemy) do
+                                             damage_enemy = self:checkCollisions(self, v)
+                                             if damage_enemy == true then
+                                                      v.health = v.health - self.damage
+                                                      if v.stagger == true then
+                                                               v.x = v.x - 10
+                                                      end
+                                             end
                                     end
                            end
                            self.sword_timer = self.sword_timer + 1
@@ -96,9 +102,11 @@ function player:move(dt)
                            self.sprite = self.gather_active_sprite
                            if self.gather_progress > self.gather_limit then
                                     self.gather_progress = 0
-                                    pickup_orb = self:checkCollisions(bob, neworb)
-                                    if pickup_orb == true then
-                                             orbs:pickup()
+                                    for i, v in ipairs(orbs) do
+                                             pickup_orb = self:checkCollisions(self, v)
+                                             if pickup_orb == true then                                      
+                                                      v:pickup()
+                                             end
                                     end
                            end
                   end
@@ -138,10 +146,10 @@ function player:keypressed(k)
 end
 
 function player:checkCollisions(a, b)
-         if a.hitbox.x + a.hitbox.width > b.x then
-                  if a.hitbox.x < b.x + b.hitbox.width then   
-                           if a.hitbox.y + a.hitbox.height > b.y then
-                                    if a.hitbox.y < b.y + b.hitbox.height then
+         if a.hitbox.x + a.hitbox.width > b.hitbox.x then
+                  if a.hitbox.x < b.hitbox.x + b.hitbox.width then   
+                           if a.hitbox.y + a.hitbox.height > b.hitbox.y then
+                                    if a.hitbox.y < b.hitbox.y + b.hitbox.height then
                                              return true
                                     end
                            end
@@ -164,6 +172,9 @@ function player:devtools()
                            for i, v in ipairs(entity) do
                                     v.state = 'dead'
                            end
+                  end,
+                  warp = function(lx, ly)
+                           self.x, self.y = lx, ly
                   end
          }   
          return tools 

@@ -7,19 +7,22 @@ function orbs.new(x, y, pointValue, size)
          instance.y = y
          instance.width = 20 * size
          instance.height = 20 * size
+
          instance.hitbox = {}
+         instance.hitbox.x = instance.x
+         instance.hitbox.y = instance.y
          instance.hitbox.width = instance.width
          instance.hitbox.height = instance.height
+         
          instance.pointValue = pointValue
          instance.alpha = 100
          return instance
 end
 
 function orbs:pickup()
-         game.points = game.points + 1
-         for i, v in ipairs(orbs) do
-                  v.alpha = 100
-         end
+         game.points = game.points + self.pointValue
+         self.hitbox.x, self.hitbox.y = -600, -600
+         self.alpha = 0
 end
 
 function orbs:draw()
