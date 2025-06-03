@@ -71,11 +71,6 @@ function player:interact()
          end
 
          if love.mouse.isDown("1") or love.keyboard.isDown("x", "space", "m") then
-                  --[[
-                  THE FOLLOWING CODE NEEDS A REWORK FOR THESE REASONS:
-                  IT CAN ONLY CHECK A DAMAGE MARK FOR _ONE_ ENEMY
-                  (IT CAN ONLY CHECK FOR ONE)
-                  ]]
                   if self.mode == "sword" and self.sword_timer ~= 10 then
                            if self.sword_timer == 1 then
                                     for i, v in ipairs(enemy) do

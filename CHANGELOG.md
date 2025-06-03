@@ -1,3 +1,10 @@
+6/2/2025
+-added constant enemy spawning
+-added orb on enemy death
+-added upgraded versions of orbs
+-multi-entity checking for collisions
+
+
 5/30/2025
 -added test version of game
          -unstable stuff includes:

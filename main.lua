@@ -24,12 +24,10 @@ function love.load()
          dtp.setDamage(100)
 
          -- format for enemy : (speed, health, type(string), scale)
-         james = enemy.new(100, 1000, "boss", 1)
-         table.insert(enemy, james)
 
+         est = 100
+         esr = 0.8
          -- format for orb : (x, y, points given, size)
-         neworb = orbs.new(400, 300, 12, 1)
-         table.insert(orbs, neworb)
 end
 
 function love.update(dt)
@@ -39,8 +37,19 @@ function love.update(dt)
          if game.state == 'running' then
                   bob:move(dt)
                   bob:interact()
-                  james:move(dt, bob.x, bob.y)
-                  james:checkDeath()
+         
+                  est = est + esr
+                  print(est)
+                  if est >= 100 then
+                           print("here")
+                           newEnemy = enemy.new(60, 100, "def", 1)
+                           table.insert(enemy, newEnemy)
+                           est = 0
+                  end
+                  for i, v in ipairs(enemy) do
+                           v:move(dt, bob.x, bob.y)
+                           v:checkDeath()
+                  end
          end
 end
 
@@ -53,8 +62,12 @@ function love.draw()
                   love.graphics.print("score:"..game.points, font, love.graphics.getWidth() / 2, 10)
                   bob:draw()
                   love.graphics.setColor(1, 0, 0)
-                  james:draw()
-                  neworb:draw()
+                  for i, v in ipairs(enemy) do
+                           v:draw()
+                  end
+                  for i, v in ipairs(orbs) do
+                           v:draw()
+                  end
          end
 end
 
