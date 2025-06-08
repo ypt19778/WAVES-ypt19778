@@ -19,9 +19,9 @@ function orbs.new(x, y, pointValue, size)
          return instance
 end
 
-function orbs:pickup()
+function orbs:pickup(mark)
          game.points = game.points + self.pointValue
-         self.hitbox.x, self.hitbox.y = -600, -600
+         table.remove(orbs, mark)
          self.alpha = 0
 end
 

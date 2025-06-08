@@ -1,3 +1,8 @@
+6/8/2025
+-bug fixes:
+         enemy lag on check
+         fix on hitboxes
+
 6/2/2025
 -added constant enemy spawning
 -added orb on enemy death

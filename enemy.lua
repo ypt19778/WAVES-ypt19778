@@ -63,6 +63,9 @@ function enemy.new(speed, health, type, scale)
          instance.state = 'alive'
          instance.alpha = 100
          
+         instance.debug = {
+                  showHitBoxes = false
+         }
          return instance
 end
 
@@ -74,13 +77,15 @@ function enemy:draw()
                            love.graphics.rectangle("fill", v.x, v.y - 40, v.health, 20)
                   end
          end
-         love.graphics.rectangle("line", self.x, self.y, self.hitbox.width, self.hitbox.height)
+         if self.debug.showHitBoxes == true then
+                  love.graphics.rectangle("line", self.x, self.y, self.hitbox.width, self.hitbox.height)
+         end
 end
 
 function enemy:checkDeath()
          for i, v in ipairs(enemy) do
-                  if v.health =< 0 then
-                           v:despawn() 
+                  if v.health < 1 then
+                           v:despawn(i) 
                   end
          end
 end
@@ -98,7 +103,7 @@ function enemy:move(dt, gotox, gotoy)
          self.hitbox.y = self.y
 end
 
-function enemy:despawn()
+function enemy:despawn(mark)
          if self.state ~= 'dead' then
                   self.orb = orbs.new(self.x, self.y, self.scorevalue, self.scale)
          end
@@ -108,5 +113,6 @@ function enemy:despawn()
          self.stagger = true
          self.speed = 0
          self.health = 0
+         table.remove(enemy, mark)
          self.state = 'dead'       
 end 

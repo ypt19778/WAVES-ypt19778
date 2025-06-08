@@ -28,6 +28,7 @@ function love.load()
          est = 100
          esr = 0.8
          -- format for orb : (x, y, points given, size)
+         entities = 0
 end
 
 function love.update(dt)
@@ -39,11 +40,10 @@ function love.update(dt)
                   bob:interact()
          
                   est = est + esr
-                  print(est)
                   if est >= 100 then
-                           print("here")
                            newEnemy = enemy.new(60, 100, "def", 1)
                            table.insert(enemy, newEnemy)
+                           entities = entities + 1
                            est = 0
                   end
                   for i, v in ipairs(enemy) do
@@ -54,6 +54,7 @@ function love.update(dt)
 end
 
 function love.draw()
+         love.graphics.print(entities, bob.x, bob.y - 100)
          if game.state == 'menu' then
                   menu:draw()
          end

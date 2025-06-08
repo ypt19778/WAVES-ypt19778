@@ -12,10 +12,10 @@ function player.new(x, y, speed, health, scale)
          instance.damage = 1
 
          instance.hitbox = {}
-         instance.hitbox.width = 200
-         instance.hitbox.height = 200
-         instance.hitbox.x = instance.x - (instance.hitbox.width / 2)
-         instance.hitbox.y = instance.y - ((instance.hitbox.height / 2) + 100)
+         instance.hitbox.width = 150
+         instance.hitbox.height = 100
+         instance.hitbox.x = instance.x
+         instance.hitbox.y = instance.y
 
          instance.mode = "nil"
          instance.sprite = "(- -)"
@@ -27,11 +27,15 @@ function player.new(x, y, speed, health, scale)
          instance.gather_active_sprite = "(> <)"
          instance.gather_progress = 0
          instance.gather_speed = 1
-         instance.gather_limit = 75
+         instance.gather_limit = 75 
 
          instance.scale = scale
 
          instance.sword_timer = 0
+
+         instance.debug = {
+                  showHitBoxes = false
+         }
          return instance
 end
 
@@ -46,17 +50,17 @@ function player:move(dt)
                   self.y = love.graphics.getHeight() - 20
          end
 
-         if love.keyboard.isDown("w", "i") then
+         if love.keyboard.isDown("w", "i", "up") then
                   self.y = self.y - self.speed * dt
-         elseif love.keyboard.isDown("a", "j") then
+         elseif love.keyboard.isDown("a", "j", "left") then
                   self.x = self.x - self.speed * dt
-         elseif love.keyboard.isDown("s", "k") then
+         elseif love.keyboard.isDown("s", "k", "down") then
                   self.y = self.y + self.speed * dt
-         elseif love.keyboard.isDown("d", "l") then
+         elseif love.keyboard.isDown("d", "l", "right") then
                   self.x = self.x + self.speed * dt
          end  
-         self.hitbox.x = self.x - (self.hitbox.width / 2)
-         self.hitbox.y = self.y - (self.hitbox.height / 2)
+         self.hitbox.x = self.x - self.hitbox.width / 2.5
+         self.hitbox.y = self.y - self.hitbox.height / 2
 end
 
 function player:interact()
@@ -100,7 +104,7 @@ function player:interact()
                                     for i, v in ipairs(orbs) do
                                              pickup_orb = self:checkCollisions(self, v)
                                              if pickup_orb == true then                                      
-                                                      v:pickup()
+                                                      v:pickup(i)
                                              end
                                     end
                            end
@@ -127,7 +131,9 @@ function player:draw()
          end
          love.graphics.setColor(1, 1, 1)
          love.graphics.rectangle("fill", self.x, self.y - 25, self.gather_progress, 10)
-         love.graphics.rectangle("line", self.hitbox.x, self.hitbox.y, self.hitbox.width, self.hitbox.height)
+         if self.debug.showHitBoxes == true then
+                  love.graphics.rectangle("line", self.hitbox.x, self.hitbox.y, self.hitbox.width, self.hitbox.height)
+         end
 end
 
 function player:keypressed(k)
@@ -157,7 +163,7 @@ function player:devtools()
                   setDamage = function(damage)
                            self.damage = damage
                   end,
-                  setSprites = function(sprite, input)
+                  setSprite = function(sprite, input)
                            self.sprite = input
                   end,
                   setSpeed = function(speed)
@@ -168,8 +174,8 @@ function player:devtools()
                                     v.state = 'dead'
                            end
                   end,
-                  warp = function(lx, ly)
-                           self.x, self.y = lx, ly
+                  warp = function(x, y)
+                           self.x, self.y = x, y
                   end
          }   
          return tools 

@@ -1,9 +1,6 @@
 MAIN BETA UPDATE:
 -list:
-         collectibles for pickaxe
-         shield blocking
-         more enemy spawning
-         less buggy healthbars
+         add saving to game
 MAIN GAME:
 -list:
          more enemy types (exeption)
@@ -11,4 +8,4 @@ MAIN GAME:
          add customization menu
 _more?:
          V 1.(number)
-         added in future updates.
+         added in future updates
